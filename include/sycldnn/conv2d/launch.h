@@ -33,6 +33,8 @@
 #include "sycldnn/conv2d/implementation/winograd.h"
 #include "sycldnn/conv2d/selector/selector.h"
 
+#include <stdio.h>
+
 namespace sycldnn {
 namespace conv2d {
 /**
@@ -105,6 +107,12 @@ SNNStatus launch(typename Backend::template pointer_type<T const> input,
   SNN_VALIDATE_PARAM(
       params.filter_format == sycldnn::FilterFormat::HWCF,
       "Currently SYCL-DNN only supports the HWCF filter format.");
+
+  printf("Conv2D: %d %d %d %d %d %d %d %d %d %d %d %d %d\n", params.batch,
+         params.channels, params.features, params.in_rows, params.in_cols,
+         params.out_rows, params.out_cols, params.window_rows,
+         params.window_cols, params.stride_rows, params.stride_cols,
+         params.pad_rows, params.pad_cols);
 
   Algorithm algo_tag = selector.select<ConvType>(params);
   switch (algo_tag) {
